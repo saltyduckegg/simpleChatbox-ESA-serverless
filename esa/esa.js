@@ -13,7 +13,11 @@
 //     }]
 // }
 
-
+const corsHeaders = {
+    "Access-Control-Allow-Origin": "https://simplechatbox-esa-serverless.lzzlzz.com",
+    "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
 
 async function getKEY() {
     try {
@@ -38,6 +42,12 @@ async function getKEY() {
 
 export default {
     async fetch(request) {
+        if (request.method === "OPTIONS") {
+            return new Response(null, {
+                status: 204,
+                headers: corsHeaders,
+            });
+        }
         const referer = request.headers.get('Referer');
         const origin = request.headers.get('Origin');
         const allowedOrigin = 'https://simplechatbox-esa-serverless.lzzlzz.com';
@@ -46,7 +56,10 @@ export default {
             (origin && origin === allowedOrigin);
 
         if (!isAllowed) {
-            return new Response('Forbidden: Invalid Referer or Origin', { status: 403 });
+            return new Response('Forbidden: Invalid Referer or Origin', {
+                status: 403,
+                headers: corsHeaders
+            });
         }
         const body = await request.json();
         let messages = body.messages;
@@ -72,7 +85,9 @@ async function getMessages(messages) {
                 }
             })
         if (!response.ok) {
-            return new Response('There was a problem with the API')
+            return new Response('There was a problem with the API', {
+                headers: corsHeaders
+            })
         }
         const data = await response.json()
         console.log(data)
@@ -83,10 +98,13 @@ async function getMessages(messages) {
         };
         return new Response(JSON.stringify(responseBody), {
             headers: {
+                ...corsHeaders,
                 "content-type": "application/json;charset=UTF-8"
             }
         });
     } catch (err) {
-        return new Response(err)
+        return new Response(err, {
+            headers: corsHeaders
+        })
     }
 }
