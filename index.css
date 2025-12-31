@@ -63,6 +63,18 @@ button {
     background-color: transparent;
 }
 
+button:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+    transition: transform 0.1s ease-in-out;
+}
+
+button:active {
+    cursor: pointer;
+    transform: scale(0.9);
+    transition: transform 0.05s ease-in-out;
+}
+
 #buttonContainer button {
     padding: 0 0 0 0;
     width: 80px;
