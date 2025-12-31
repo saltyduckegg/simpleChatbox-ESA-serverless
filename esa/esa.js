@@ -61,9 +61,11 @@ export default {
                 headers: corsHeaders
             });
         }
-        const body = await request.json();
+        let body = await request.json();
         let messages = body.messages;
-        messages = JSON.parse(messages);
+        if (typeof messages === 'string') {
+            messages = JSON.parse(messages);
+        }
         return await getMessages(messages);
     }
 };
